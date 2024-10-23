@@ -1,4 +1,9 @@
 from datetime import datetime, date
+from array import array
+
+def updateCompra(compra, ):
+    print(updates)
+    
 
 
 observador = True
