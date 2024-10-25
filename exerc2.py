@@ -1,5 +1,6 @@
 from datetime import datetime, date
 from array import array
+from app import *
 
 def showEvents(listEvent = []):
     print('---Lista De Eventos---\n')
@@ -14,12 +15,25 @@ def ticketsAvailable (listEvent = [], numTickets = None, nameEvent = ''):
    
    for event in listEvent:
        if event['nome_evento'] == nameEvent:
-           if event['quantIngressos'] >= numTickets:
+           if event['quantIngressos'] >= numTickets and numTickets > 0:
                event['quantIngressos'] -= numTickets
                return numTickets
            else:
                return -1
    return -1
+
+def validationName(message = ''):
+    
+   nameBuyer =input(str(message))
+    
+   while len(nameBuyer) < 3 or nameBuyer.isnumeric:
+       print('ERRO: O nome digita é invalido. Tente novamente.')
+       nameBuyer =input(str(message))
+    
+   return nameBuyer
+  
+def apllyDescount():    
+      
 
 def buyTicket(listEvent = not None, orders = [], nameEvent = '', nameBuyer = '', numTickets = None): 
     eventoValido = False
@@ -27,7 +41,7 @@ def buyTicket(listEvent = not None, orders = [], nameEvent = '', nameBuyer = '',
     for event in listEvent:
            if event['nome_evento'] == nameEvent:
                 eventoEncontrado = True
-                nomeComprador = input('Digite seu nome: ')
+                nomeComprador = validationName('Digite seu nome: ')     
                 quantIngressos = ticketsAvailable(listEvent, numTickets, nameEvent)
                 
                 while quantIngressos == -1:
@@ -100,52 +114,42 @@ eventos = [
 infoComprador = []
 
 while observador:
-   switchController = int(input('[1] - Comprar ingresso\n[2] - Imprimir lista de eventos\n[3] - Mostrar compras\n[4] - Encerrar compra\nDigite uma opção: '))
-    
+   try:
+    switchController = int(input('[1] - Comprar ingresso\n[2] - Imprimir lista de eventos\n[3] - Mostrar compras\n[4] - Encerrar compra\nDigite uma opção: '))
         
-   match switchController:
-        case 1:   
-            eventoValido = False
-    
-            while not eventoValido:
-                eventoIngresso = input('Informe de qual evento deseja comprar o ingresso: ').lower()
-                eventoValido = buyTicket(eventos, infoComprador, eventoIngresso)
-           
-                comprarTicket = input('deseja comprar um ingresso? [S] ou [N]: ')
-    
-                if comprarTicket.upper() != 'S':
-                   break
-                
-        case 2:
-         showEvents(eventos) 
-         
-        case 3:
-            print('Resumo de compras:\n')
-            for comprador in infoComprador:            
-                print(f'Nome do comprador: {comprador['nome_comprador']}\n')    
-                for compra in comprador['compras']:
-                    print('---Compras--- ')               
-                    print(f"Evento: {compra['evento']}")
-                    print(f"Quant. ingressos: {compra['quant_ingressos']}")
-                    print(f"Data da compra: {compra['data_compra']}")
-                    print(f"Valor total: R$ {compra['valor_total']:.2f}\n")
-         
-        case 4:
-            observador = False
+    match switchController:
+            case 1:   
+                eventoValido = False
         
-        case _:
-            print("Opção inválida! Tente novamente.")       
-       
-       
-       
-     
-   
-    
-
-   
-   
-   
-  
-       
-       
-
+                while not eventoValido:
+                    eventoIngresso = input('Informe de qual evento deseja comprar o ingresso: ').lower()
+                    eventoValido = buyTicket(eventos, infoComprador, eventoIngresso)
+            
+                    comprarTicket = input('deseja comprar um ingresso? [S] ou [N]: ')
+        
+                    if comprarTicket.upper() != 'S':
+                       break
+                    
+            case 2:
+                showEvents(eventos) 
+            
+            case 3:
+                print('Resumo de compras:\n')
+                for comprador in infoComprador:            
+                    print(f'Nome do comprador: {comprador['nome_comprador']}\n')    
+                    for compra in comprador['compras']:
+                        print('---Compras--- ')               
+                        print(f"Evento: {compra['evento']}")
+                        print(f"Quant. ingressos: {compra['quant_ingressos']}")
+                        print(f"Data da compra: {compra['data_compra']}")
+                        print(f"Valor total: R$ {compra['valor_total']:.2f}\n")
+            
+            case 4:
+                observador = False
+                print('Progama encerrado')
+            
+            case _:
+                print("Opção inválida! Tente novamente.")  
+                     
+   except ValueError:   
+       print("Erro: por favor, insira uma opção válida.")
