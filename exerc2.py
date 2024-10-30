@@ -1,6 +1,47 @@
 from datetime import datetime, date
 from array import array
 from app import *
+from re import split
+import json
+
+class ApllyDescount:
+    
+    def __init__(self, price, quantIngresso):
+        self.descount = False
+        self.typeCoupon = ''
+        self.price = price
+        self.totPrice = price * quantIngresso
+        self.quantIngresso = quantIngresso
+    
+    def checkDescount(self):
+        if self.quantIngresso >= 10:
+            self.descount = True
+            self.typeCoupon = "10%"
+            return self.totPrice - ((self.totPrice * 2 / 10))
+        
+        elif self.quantIngresso >= 5:
+            self.descount = True
+            self.typeCoupon = "5%"
+            return self.totPrice - ((self.totPrice / 10))
+        
+        return self.totPrice, False
+    
+    def descountApllied(self):
+        return self.descount
+            
+def shoppingList(listBuys = []):
+    if listBuys:
+        print('Nenhuma compra foi feita ainda.')
+        
+    print('Resumo de compras:\n')
+    for buyer in listBuys:            
+        print(f'Nome do comprador: {buyer['nome_comprador']}\n')    
+        for buy in buyer['compras']:
+            print('---Compras--- ')               
+            print(f"Evento: {buy['evento']}")
+            print(f"Quant. ingressos: {buy['quant_ingressos']}")
+            print(f"Data da compra: {buy['data_compra']}")
+            print(f"Valor total: R$ {buy['valor_total']:.2f}\n")      
 
 def showEvents(listEvent = []):
     print('---Lista De Eventos---\n')
@@ -24,60 +65,75 @@ def ticketsAvailable (listEvent = [], numTickets = None, nameEvent = ''):
 
 def validationName(message = ''):
     
-   nameBuyer =input(str(message))
+   nameBuyer = input(str(message))
     
-   while len(nameBuyer) < 3 or nameBuyer.isnumeric:
+   while len(nameBuyer) < 3 or nameBuyer.isnumeric():
        print('ERRO: O nome digita é invalido. Tente novamente.')
-       nameBuyer =input(str(message))
+       nameBuyer = input(str(message))
     
    return nameBuyer
-  
-def apllyDescount():    
-      
 
-def buyTicket(listEvent = not None, orders = [], nameEvent = '', nameBuyer = '', numTickets = None): 
+def buyTicket(listEvent = [], orders = [], nameEvent = '', nameBuyer = '', numTickets = None):
     eventoValido = False
     eventoEncontrado = False
-    for event in listEvent:
-           if event['nome_evento'] == nameEvent:
-                eventoEncontrado = True
-                nomeComprador = validationName('Digite seu nome: ')     
+    for event in listEvent: 
+        if event['nome_evento'] == nameEvent:
+            eventoEncontrado = True
+            nomeComprador = validationName('Digite seu nome: ')     
+            quantIngressos = ticketsAvailable(listEvent, numTickets, nameEvent)
+                
+            while quantIngressos == -1:
+                print('ERRO: A quantidade de ingressos informada, não esta disponivel para o evento.Informe uma quantidade valida.\n')
                 quantIngressos = ticketsAvailable(listEvent, numTickets, nameEvent)
-                
-                while quantIngressos == -1:
-                    print('ERRO: A quantidade de ingressos informada, não esta disponivel para o evento. Informe uma quantidade valida.\n')
-                    quantIngressos = ticketsAvailable(listEvent, numTickets, nameEvent)
+            
+            cuponDescount = ApllyDescount(event['valor'], quantIngressos)
+            price = cuponDescount.checkDescount()
+            
+            if cuponDescount.descountApllied():
+                print(f'Desconto de {cuponDescount.typeCoupon} foi aplicado sobre o valor de {cuponDescount.totPrice}')
+            else:
+                print() 
+                   
+            dataCompra = date.today()
+            
+            with open("mockBuyers.json", 'w') as buyers:
+                buyers.write(json.dumps({
+                    "nome_comprador": nomeComprador,
+                    "compras": [{
+                    "evento": event["nome_evento"],
+                    "quant_ingressos": quantIngressos,
+                    "data_compra": dataCompra.strftime("%d/%m/%Y"),
+                    "valor_total": price
+                    }]
+                }, indent=4))
+            
+            # buyer_exist = None
+            # for order in orders:
+            #     if order['nome_comprador'] == nomeComprador:
+            #         buyer_exist = order
                     
-                
-                dataCompra = date.today()
-                
-                buyer_exist = None
-                for order in orders:
-                    if order['nome_comprador'] == nomeComprador:
-                        buyer_exist = order
-                        
-                if buyer_exist:
-                    buyer_exist['compras'].append(
-                            {
-                            'evento': event['nome_evento'],
-                            'quant_ingressos': quantIngressos,
-                            'data_compra': dataCompra.strftime("%d/%m/%Y"),
-                            'valor_total': quantIngressos * event['valor']
-                            }
-                         )
-                else:        
-                    orders.append({
-                        'nome_comprador': nomeComprador,
-                        'compras': [{
-                        'evento': event['nome_evento'],
-                        'quant_ingressos': quantIngressos,
-                        'data_compra': dataCompra.strftime("%d/%m/%Y"),
-                        'valor_total': quantIngressos * event['valor']}
-                        ],
-                    })
-                print(f'ingresso(s) para o evento {event["nome_evento"]} comprado com sucesso!\n')
-                eventoValido = True
-                break
+            # if buyer_exist:
+            #     buyer_exist['compras'].append(
+            #             {
+            #             'evento': event['nome_evento'],
+            #             'quant_ingressos': quantIngressos,
+            #             'data_compra': dataCompra.strftime("%d/%m/%Y"),
+            #             'valor_total': price
+            #             }
+            #             )
+            # else:        
+            #     orders.append({
+            #         'nome_comprador': nomeComprador,
+            #         'compras': [{
+            #         'evento': event['nome_evento'],
+            #         'quant_ingressos': quantIngressos,
+            #         'data_compra': dataCompra.strftime("%d/%m/%Y"),
+            #         'valor_total': price
+            #         }]
+            #     })
+            print(f'ingresso(s) para o evento {event["nome_evento"]} comprado com sucesso!\n')
+            eventoValido = True
+            break
         
     if not eventoEncontrado:
          eventoIngresso = input('Evento informado é invalido. Digite [S] para digitar novo evento ou [N] para interromper a compra: ').lower()
@@ -89,7 +145,7 @@ def buyTicket(listEvent = not None, orders = [], nameEvent = '', nameBuyer = '',
         
     return eventoValido
 
- 
+
 observador = True
 eventos = [
     {
@@ -111,7 +167,15 @@ eventos = [
         'quantIngressos': 15
     }
 ]
-infoComprador = []
+listEvents = None
+
+infoBuyer = None
+
+with open("mockBuyers.json") as buyers:
+    infoComprador = json.load(buyers)
+
+with open("mockEvents.json") as events:
+    listEvents = json.load(events)
 
 while observador:
    try:
@@ -123,7 +187,7 @@ while observador:
         
                 while not eventoValido:
                     eventoIngresso = input('Informe de qual evento deseja comprar o ingresso: ').lower()
-                    eventoValido = buyTicket(eventos, infoComprador, eventoIngresso)
+                    eventoValido = buyTicket(listEvents, infoBuyer, eventoIngresso)
             
                     comprarTicket = input('deseja comprar um ingresso? [S] ou [N]: ')
         
@@ -131,18 +195,10 @@ while observador:
                        break
                     
             case 2:
-                showEvents(eventos) 
+                showEvents(listEvents) 
             
             case 3:
-                print('Resumo de compras:\n')
-                for comprador in infoComprador:            
-                    print(f'Nome do comprador: {comprador['nome_comprador']}\n')    
-                    for compra in comprador['compras']:
-                        print('---Compras--- ')               
-                        print(f"Evento: {compra['evento']}")
-                        print(f"Quant. ingressos: {compra['quant_ingressos']}")
-                        print(f"Data da compra: {compra['data_compra']}")
-                        print(f"Valor total: R$ {compra['valor_total']:.2f}\n")
+               shoppingList(infoBuyer)
             
             case 4:
                 observador = False

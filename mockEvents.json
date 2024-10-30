@@ -1,0 +1,20 @@
+[
+    {
+        "nome_evento": "rock in rio",
+        "valor": 70.00,
+        "descricao": "Id nostrud ea aliquip quis pariatur ad consectetur sunt aliquip Lorem.",
+        "quantIngressos": 100
+    },
+    {
+        "nome_evento": "lollapalooza",
+        "valor": 100.00,
+        "descricao": "Incididunt culpa est reprehenderit nisi occaecat consequat.",
+        "quantIngressos": 50
+    },
+    {
+        "nome_evento": "coachella",
+        "valor": 150.00,
+        "descricao": "Proident occaecat reprehenderit labore est laborum pariatur sint.",
+        "quantIngressos": 15
+    }
+]

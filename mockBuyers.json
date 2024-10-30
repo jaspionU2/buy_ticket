@@ -1,0 +1,14 @@
+{
+    "compras": [
+        {
+            "data_compra": "30/10/2024",
+            "evento": "coachella",
+            "quant_ingressos": 4,
+            "valor_total": [
+                600.0,
+                false
+            ]
+        }
+    ],
+    "nome_comprador": "paula"
+}

@@ -38,7 +38,7 @@ def createPassWord():
            print(f'senha formatada: {type(existCharacterLow)}, {type(existCharacterUpper)}')
            createPassWord()
            
-    return '-'.join(senha)
+    return ''.join(senha)
   
   
-print(createPassWord())
+# print(createPassWord())
