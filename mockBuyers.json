@@ -1,14 +1,82 @@
-{
-    "compras": [
-        {
-            "data_compra": "30/10/2024",
-            "evento": "coachella",
-            "quant_ingressos": 4,
-            "valor_total": [
-                600.0,
-                false
-            ]
-        }
-    ],
-    "nome_comprador": "paula"
-}
+[
+    {
+        "nome_comprador": "pedro",
+        "compras": [
+            {
+                "evento": "coachella",
+                "quant_ingressos": 11,
+                "data_compra": "31/10/2024",
+                "valor_total": 1320.0
+            }
+        ]
+    },
+    {
+        "nome_comprador": "pablo",
+        "compras": [
+            {
+                "evento": "rock in rio",
+                "quant_ingressos": 7,
+                "data_compra": "31/10/2024",
+                "valor_total": 441.0
+            }
+        ]
+    },
+    {
+        "nome_comprador": "jack",
+        "compras": [
+            {
+                "evento": "rock in rio",
+                "quant_ingressos": 17,
+                "data_compra": "31/10/2024",
+                "valor_total": 952.0
+            }
+        ]
+    },
+    {
+        "nome_comprador": "joana",
+        "compras": [
+            {
+                "evento": "rock in rio",
+                "quant_ingressos": 29,
+                "data_compra": "31/10/2024",
+                "valor_total": 1624.0
+            }
+        ]
+    },
+    {
+        "nome_comprador": "pedro",
+        "compras": [
+            {
+                "evento": "coachella",
+                "quant_ingressos": 11,
+                "data_compra": "31/10/2024",
+                "valor_total": 1320.0
+            }
+        ]
+    },
+    {
+        "nome_comprador": "henrique",
+        "compras": [
+            {
+                "evento": "rock in rio",
+                "quant_ingressos": 27,
+                "data_compra": "31/10/2024",
+                "valor_total": 1512.0
+            }
+        ]
+    },
+    {
+        "nome_comprador": "jos\u00e9",
+        "compras": [
+            {
+                "evento": "coachella",
+                "quant_ingressos": 2,
+                "data_compra": "31/10/2024",
+                "valor_total": [
+                    300.0,
+                    false
+                ]
+            }
+        ]
+    }
+]
